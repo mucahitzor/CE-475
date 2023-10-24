@@ -1,0 +1,235 @@
+---
+title: "Linear Regression Application"
+subtitle: "CE 475"
+author:
+    - Samet ŞİMŞEK
+    - Mücahit ZOR
+date: 10/25/2023
+format: html
+editor: visual
+editor_options: 
+  chunk_output_type: console
+---
+
+## Packages
+
+Load necessary packages
+
+```{r}
+suppressPackageStartupMessages({
+  library(tidyverse)
+  library(tidymodels)
+  library(hrbrthemes)
+})
+theme_set(theme_ipsum_es(axis_title_size = 11 , axis_title_just = "c") + theme(axis.line = element_line(color ="black")))
+```
+
+# The data
+
+```{r}
+penguins_rawdata <- palmerpenguins::penguins
+penguins_rawdata
+```
+
+The data contains size measurements for three penguin species that lives on three islands.
+
+![](https://allisonhorst.github.io/palmerpenguins/reference/figures/lter_penguins.png)
+
+The distribution of the penguins is as follows:
+
+```{r}
+penguins_rawdata %>% 
+  na.omit() %>% 
+  count(species, island)
+```
+
+Since Adelie is the only one that lives on 3 of the islands we hesitate to use `island` variable in our model, but we can't be sure. We'll do a further analysis about this.
+
+### Data Cleaning
+
+-   removing NA values
+-   transforming `body_mass_g` to `body_mass_kg`
+-   assigning results to a new data frame
+
+```{r}
+penguins_rawdata %>% 
+  na.omit() %>% 
+  mutate(body_mass_kg = body_mass_g / 1000) %>%
+  select(-body_mass_g) -> penguins
+penguins
+```
+
+```{r}
+#| eval: true
+#| echo: false
+penguins$species <- factor(penguins$species, levels = c("Gentoo", "Adelie", "Chinstrap"), ordered = F)
+```
+
+### Split the Data
+
+```{r}
+set.seed(25112023)
+penguins_split <- penguins %>% initial_split() 
+penguins_split
+```
+
+Extract the training and test data;
+
+```{r}
+penguins_training <- training(penguins_split)
+penguins_training
+```
+
+```{r}
+penguins_testing <- testing(penguins_split)
+penguins_testing
+```
+
+# Our model
+
+Our aim is to predict the `body mass values` of penguins. First we check out the correlation between numeric variables.
+
+```{r}
+penguins_training %>% select(where(is.numeric)) %>% cor()
+```
+
+There seems like a correlation between `body_mass_g` and all the numeric variables expect `year` which we cannot consider a numeric variable.
+
+We now need to decide which variables to use.
+
+```{r}
+#| code-overflow: wrap
+leaps::regsubsets(
+  body_mass_kg ~ ., data = penguins_training, nvmax = NULL, method = "exhaustive", force.in = NULL, force.out = "year"
+) -> best_subset
+best_subset
+```
+
+```{r}
+best_subset %>% 
+  summary() -> best_subset_summary
+best_subset_summary$adjr2
+```
+
+```{r}
+best_subset_summary$adjr2 %>% which.max() -> best_mod_n
+best_mod_n
+```
+
+```{r}
+best_subset_summary$which[best_mod_n,]
+```
+
+Variable `island` is not on the best model so we are not going to include it to our model formula. Now we can define our *recipe* :
+
+```{r}
+#| code-overflow: wrap
+penguins_training %>%
+  recipe(body_mass_kg ~ flipper_length_mm + bill_length_mm + bill_depth_mm+ species + sex) %>% 
+  step_dummy(species) %>% 
+  step_dummy(sex) -> penguins_recipe
+penguins_recipe
+```
+
+Now we tell R that we are going to use linear model and do a regression. Define the Linear Model Specs
+
+```{r}
+linear_reg() %>% 
+  set_engine("lm") %>% 
+  set_mode("regression") -> lm_spec
+lm_spec
+```
+
+Then we define our Workflow
+
+```{r}
+workflow() %>% 
+  add_model(lm_spec) %>% 
+  add_recipe(penguins_recipe) -> penguins_workflow
+penguins_workflow
+```
+
+# Fit the Model
+
+Now we fit our model to the training data.
+
+```{r}
+penguins_workflow %>% 
+  fit(data = penguins_training)
+```
+
+We now have the coefficients of each variable. To get more information we can summarise the model:
+
+```{r}
+penguins_workflow %>% 
+  fit(data = penguins_training) %>% 
+  extract_fit_engine() %>% 
+  summary()
+```
+
+To see the `root mean squared error` we use `rmse` function
+
+```{r}
+penguins_workflow %>% 
+  fit(data = penguins_training) %>% 
+  extract_fit_engine() %>% 
+  augment(data = penguins_training) %>% 
+  rmse(truth = body_mass_kg, estimate = .fitted)
+```
+
+To see the actual values of dependent varaible and our estimation together we use `augment` function and select the two
+
+```{r}
+penguins_workflow %>% 
+  fit(data = penguins_training) %>% 
+  extract_fit_engine() %>% 
+  augment(data = penguins_training) %>% 
+  select(body_mass_kg, .fitted)
+```
+
+```{r}
+penguins_workflow %>% 
+  fit(data = penguins_training) %>% 
+  extract_fit_engine() %>% 
+  augment( data = penguins_training) %>% 
+  ggplot() + aes(x = .fitted, y = body_mass_kg) +geom_point() + 
+  geom_smooth(method = "lm", color = "red") + facet_wrap(sex~species, scales = "fixed") + geom_abline(slope =1, intercept = 0)
+```
+
+```{r}
+penguins_workflow %>% 
+  fit(data = penguins_training) %>% 
+  extract_fit_engine() %>% 
+  augment( data = penguins_training) %>% 
+  ggplot() + aes(x = .fitted, y = body_mass_kg) +#geom_point() + 
+  geom_smooth(method = "lm", color = "red") + facet_wrap(sex~species, scales = "fixed") + geom_abline(slope =1, intercept = 0)
+```
+
+# accuracy in testing data
+
+Now we get the rmse and rsq of testing data fit
+
+```{r}
+penguins_workflow %>% 
+  last_fit(penguins_split) %>% 
+  collect_metrics()
+```
+
+We see that they are very close to training data, which is what we were looking for.
+
+```{r}
+penguins_workflow %>% 
+  last_fit(penguins_split) %>% 
+  collect_predictions() %>% 
+  ggplot() + aes(x = .pred, y = body_mass_kg) +geom_point() + 
+  geom_smooth(method = "lm", color = "red")  + geom_abline(slope =1, intercept = 0)
+```
+
+```{r}
+penguins_workflow %>% 
+  last_fit(penguins_split) %>% 
+  collect_predictions() %>% 
+  bind_cols(sex = penguins_testing$sex, species = penguins_testing$species) %>% 
+  ggplot() + aes(x = .pred, y = body_mass_kg) +#geom_point() + 
+  geom_smooth(method = "lm", color = "red") + facet_wrap(sex~species, scales = "fixed") + geom_abline(slope =1, intercept = 0)
+```
