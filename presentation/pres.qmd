@@ -33,6 +33,9 @@ options(tibble.width = 100)
 
 First things first: we need to load the necessary libraries
 
+
+
+
 ```{r}
 #| code-overflow: wrap
 #| echo: true
@@ -147,7 +150,7 @@ Initial split:
 #| echo: true
 #| eval: true
 #| code-line-numbers: 1|2|3
-set.seed(25112023)
+set.seed(25112023) # ensuring reproduciblity
 penguins_split <- penguins %>% initial_split() 
 penguins_split
 ```
@@ -268,6 +271,13 @@ Variable `island` is not on the best model so we are not going to include it to 
 
 ::: fragment
 Now we can define our *recipe*; which includes model formula and preprocessings
+:::
+
+::: fragment
+Here is the formula for our model:
+$$
+\text{body_mass_kg} = \alpha + \beta_0 \cdot \text{flipper_length_mm} + \beta_1 \cdot \text{bill_length_mm} + \beta_2 \cdot \text{bill_depth_mm}+ \beta_3 \cdot \text{species} + \beta_4 \text{sex}
+$$
 :::
 
 ::: fragment

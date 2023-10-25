@@ -612,7 +612,7 @@ Mücahit ZOR
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb12" data-code-line-numbers="1|2|3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a><span class="fu">set.seed</span>(<span class="dv">25112023</span>)</span>
+<div class="sourceCode cell-code" id="cb12" data-code-line-numbers="1|2|3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a><span class="fu">set.seed</span>(<span class="dv">25112023</span>) <span class="co"># ensuring reproduciblity</span></span>
 <span id="cb12-2"><a href="#cb12-2"></a>penguins_split <span class="ot">&lt;-</span> penguins <span class="sc">%&gt;%</span> <span class="fu">initial_split</span>() </span>
 <span id="cb12-3"><a href="#cb12-3"></a>penguins_split</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -824,6 +824,11 @@ Selection Algorithm: exhaustive</code></pre>
 <h2>Recipe + Model = Workflow</h2>
 <div class="fragment">
 <p>Now we can define our <em>recipe</em>; which includes model formula and preprocessings</p>
+</div>
+<div class="fragment">
+<p>Here is the formula for our model: <span class="math display">\[
+\text{body_mass_kg} = \alpha + \beta_0 \cdot \text{flipper_length_mm} + \beta_1 \cdot \text{bill_length_mm} + \beta_2 \cdot \text{bill_depth_mm}+ \beta_3 \cdot \text{species} + \beta_4 \text{sex}
+\]</span></p>
 </div>
 <div class="fragment">
 <div class="cell">
