@@ -16,10 +16,11 @@ editor_options:
 Load necessary packages
 
 ```{r}
+#| code-overflow: wrap
 suppressPackageStartupMessages({
-  library(tidyverse)
-  library(tidymodels)
-  library(hrbrthemes)
+  library(tidyverse) # data wrangling
+  library(tidymodels)# modeling
+  library(hrbrthemes)# plot themes
 })
 theme_set(theme_ipsum_es(axis_title_size = 11 , axis_title_just = "c") + theme(axis.line = element_line(color ="black")))
 ```
@@ -27,7 +28,7 @@ theme_set(theme_ipsum_es(axis_title_size = 11 , axis_title_just = "c") + theme(a
 # The data
 
 ```{r}
-penguins_rawdata <- palmerpenguins::penguins
+penguins_rawdata <- palmerpenguins::penguins 
 penguins_rawdata
 ```
 
@@ -217,6 +218,16 @@ penguins_workflow %>%
 
 We see that they are very close to training data, which is what we were looking for.
 
+
+We can get the predictions on test data set:
+```{r}
+penguins_workflow %>% 
+  last_fit(penguins_split) %>% 
+  collect_predictions()
+```
+
+
+Here is a plot to see how accurate our predictions look like
 ```{r}
 penguins_workflow %>% 
   last_fit(penguins_split) %>% 
@@ -225,6 +236,7 @@ penguins_workflow %>%
   geom_smooth(method = "lm", color = "red")  + geom_abline(slope =1, intercept = 0)
 ```
 
+Here is the breakdown of predictions on `sex` and `gender`. Seems like we did a good job overall!
 ```{r}
 penguins_workflow %>% 
   last_fit(penguins_split) %>% 
