@@ -276,7 +276,7 @@ Now we can define our *recipe*; which includes model formula and preprocessings
 ::: fragment
 Here is the formula for our model:
 $$
-\text{body_mass_kg} = \alpha + \beta_0 \cdot \text{flipper_length_mm} + \beta_1 \cdot \text{bill_length_mm} + \beta_2 \cdot \text{bill_depth_mm}+ \beta_3 \cdot \text{species} + \beta_4 \text{sex}
+\text{body_mass_kg} = \alpha + \beta_0 \cdot \text{flipper_length_mm} + \beta_1 \cdot \text{bill_length_mm} + \beta_2 \cdot \text{bill_depth_mm}+ \beta_3 \cdot \text{species} + \beta_4 \cdot \text{sex}
 $$
 :::
 
