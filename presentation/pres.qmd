@@ -1,0 +1,470 @@
+---
+title: "Linear Regression Application"
+subtitle: "CE 475"
+author:
+    - Samet ŞİMŞEK
+    - Mücahit ZOR
+date: 10/25/2023
+editor: visual
+format:
+  revealjs: 
+    auto-animate-easing: ease-in-out
+    auto-animate-unmatched: false
+    auto-animate-duration: 0.4
+    slide-number: true
+    chalkboard: 
+      buttons: false
+    preview-links: auto
+    output-location: fragment
+    transition: none
+    width: 1710
+    height: 1200
+    code-overflow: wrap
+    css: styles.css
+editor_options: 
+  chunk_output_type: console
+---
+```{r}
+options(tibble.width = 100)
+```
+
+
+## Packages 
+
+First things first: we need to load the necessary libraries
+
+```{r}
+#| code-overflow: wrap
+#| echo: true
+#| eval: true
+#| code-line-numbers: "2|3|4|6-7"
+suppressPackageStartupMessages({
+  library(tidyverse) # data wrangling
+  library(tidymodels)# modeling
+  library(hrbrthemes)# plot themes
+})
+theme_set(theme_ipsum_es(axis_title_size = 11 , axis_title_just = "c") +
+            theme(axis.line = element_line(color ="black")))
+```
+
+
+## The Data 
+
+
+The data contains size measurements for three penguin species that lives on three islands.
+
+
+```{r}
+#| echo: true
+#| eval: true
+penguins_rawdata <- palmerpenguins::penguins 
+```
+
+## The Data {auto-animate="true"}
+
+The data contains size measurements for three penguin species that lives on three islands.
+
+```{r}
+#| echo: true
+#| eval: true
+penguins_rawdata <- palmerpenguins::penguins 
+penguins_rawdata 
+```
+
+
+:::{.fragment}
+![](https://allisonhorst.github.io/palmerpenguins/reference/figures/lter_penguins.png){fig-align="center" width=50%}
+:::
+
+## The Data {auto-animate="true"} 
+
+Distribution of the varaibles
+
+```{r}
+#| echo: true
+#| eval: true
+penguins_rawdata %>% summary()
+```
+
+## The Data
+
+Lets check out the distribution of penguins closer
+
+::: {.fragment}
+```{r}
+#| echo: true
+#| eval: true
+penguins_rawdata %>% 
+  na.omit() %>% 
+  count(species, island, sort = TRUE)
+```
+
+
+:::
+
+::: {.fragment}
+Since Adelie is the only one that lives on 3 of the islands. Should we really use `island`? 
+
+We'll come to that later on
+:::
+
+## Data Cleaning
+
+
+-   removing NA values
+-   transforming `body_mass_g` to `body_mass_kg`
+-   assigning results to a new data frame
+
+
+::: {.fragment}
+```{r}
+#| echo: true
+#| eval: true
+#| code-line-numbers: "1|2|3|4|5|"
+penguins_rawdata %>% 
+  na.omit() %>% 
+  mutate(body_mass_kg = body_mass_g / 1000) %>%
+  select(-body_mass_g) -> penguins
+penguins
+```
+
+```{r}
+#| eval: true
+#| echo: false
+penguins$species <- factor(penguins$species, levels = c("Gentoo", "Adelie", "Chinstrap"), ordered = F)
+```
+
+:::
+
+## Splitting the Data {.small}
+
+::: {.fragment}
+Initial split:
+:::
+
+::: {.fragment}
+```{r}
+#| echo: true
+#| eval: true
+#| code-line-numbers: 1|2|3
+set.seed(25112023)
+penguins_split <- penguins %>% initial_split() 
+penguins_split
+```
+:::
+
+::: {.fragment}
+
+Extract the training and the test data:
+:::
+
+::: {.fragment}
+```{r}
+#| echo: true
+#| eval: true
+#| code-line-numbers: 1|2
+penguins_training <- training(penguins_split)
+penguins_training
+```
+:::
+
+::: {.fragment}
+```{r}
+#| echo: true
+#| eval: true
+#| code-line-numbers: 1|2
+penguins_testing <- testing(penguins_split)
+penguins_testing
+```
+:::
+
+## Defining the model
+::: {.fragment}
+We want to predict `body_mass_kg` of penguins. 
+:::
+
+::: {.fragment}
+Lets first check the correlation between numeric variables
+:::
+
+::: {.fragment}
+
+```{r}
+#| eval: true
+#| echo: true
+penguins_training %>% select(where(is.numeric)) %>% cor()
+```
+:::
+
+::: {.fragment}
+
+There seems like a correlation between `body_mass_g` and all the numeric variables expect `year` which we cannot consider a numeric variable.
+:::
+
+::: {.fragment}
+So, we decide not to use `year` in our model.
+:::
+
+
+## Defining the model
+### Variable selection: mixed method
+::: {.fragment}
+We now need to decide which variables to use. Lets use a mixed method of *forward selection* and *backward selection*
+:::
+
+::: {.fragment}
+
+```{r}
+#| code-overflow: wrap
+#| eval: true
+#| echo: true
+#| code-line-numbers: 1|2-3|4|
+leaps::regsubsets(
+  body_mass_kg ~ ., data = penguins_training, nvmax = NULL,
+  method = "exhaustive", force.in = NULL, force.out = "year"
+) -> best_subset
+best_subset
+```
+
+:::
+
+## Defining the model
+### Variable selection: mixed method
+::: {.fragment}
+We now need to decide which variables to use. Lets use a mixed method of *forward selection* and *backward selection*
+:::
+
+::: {.fragment}
+```{r}
+#| eval: true
+#| echo: true
+best_subset %>% 
+  summary() -> best_subset_summary
+best_subset_summary$adjr2
+```
+:::
+
+::: {.fragment}
+```{r}
+#| eval: true
+#| echo: true
+best_subset_summary$adjr2 %>% which.max() -> best_mod_n
+best_mod_n
+```
+:::
+
+::: {.fragment}
+```{r}
+#| eval: true
+#| echo: true
+best_subset_summary$which[best_mod_n,]
+```
+:::
+
+::: {.fragment}
+Variable `island`  is not on the best model so we are not going to include it to our model formula as well.
+:::
+
+## Recipe + Model = Workflow
+
+::: {.fragment}
+Now we can define our *recipe*; which includes model formula and preprocessings
+:::
+
+::: {.fragment}
+```{r}
+#| echo: true
+#| eval: true
+#| code-line-numbers: 1|2-4|5
+penguins_training %>%
+  recipe(body_mass_kg ~ flipper_length_mm + bill_length_mm + bill_depth_mm+ species + sex) %>% 
+  step_dummy(species) %>% 
+  step_dummy(sex) -> penguins_recipe
+penguins_recipe
+```
+:::
+
+::: {.fragment}
+In what model we are going to use the recepie?
+:::
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+#| eval: true
+#| code-line-numbers: 1|2|3|4
+linear_reg() %>% 
+  set_engine("lm") %>% 
+  set_mode("regression") -> lm_spec
+lm_spec
+```
+:::
+
+::: {.fragment}
+Then, our workflow becomes
+:::
+
+::: {.fragment}
+```{r}
+#| echo: true
+#| eval: true
+#| code-line-numbers: 1|2|3|4
+workflow() %>% 
+  add_model(lm_spec) %>% 
+  add_recipe(penguins_recipe) -> penguins_workflow
+penguins_workflow
+```
+
+:::
+
+
+## Fiting the Model
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+#| eval: true
+#| code-line-numbers: 1|2
+penguins_workflow %>% 
+  fit(data = penguins_training)
+```
+:::
+
+::: {.fragment auto-animate="true"}
+```{r}
+#| echo: true
+#| eval: true
+#| code-line-numbers: 3|4
+penguins_workflow %>% 
+  fit(data = penguins_training) %>% 
+  extract_fit_engine() %>% 
+  summary()
+```
+:::
+
+## Fitted vs Actual Values & RMSE
+
+::: {.fragment}
+```{r}
+#| echo: true
+#| eval: true
+#| code-line-numbers: 4|5
+penguins_workflow %>% 
+  fit(data = penguins_training) %>% 
+  extract_fit_engine() %>% 
+  augment(data = penguins_training) %>% 
+  select(body_mass_kg, .fitted, .std.resid)
+```
+
+:::
+::: {.fragment}
+The root mean squared error is 
+
+```{r}
+#| echo: true
+#| eval: true
+#| code-line-numbers: "5"
+penguins_workflow %>% 
+  fit(data = penguins_training) %>% 
+  extract_fit_engine() %>% 
+  augment(data= penguins_training) %>% 
+  rmse(truth = body_mass_kg, estimate = .fitted)
+```
+:::
+
+## Fitted vs Actual Values: training data performance
+
+```{r}
+#| eval: true
+penguins_workflow %>% 
+  fit(data = penguins_training) %>% 
+  extract_fit_engine() %>% 
+  augment( data = penguins_training) %>% 
+  ggplot() + aes(x = .fitted, y = body_mass_kg) +geom_point(color = "blue", alpha = 0.5) + 
+  geom_smooth(method = "lm", color = "red") + facet_wrap(sex~species, scales = "fixed") + geom_abline(slope =1, intercept = 0) 
+```
+
+
+
+## Fitted vs Actual Values: training data performance
+
+```{r}
+#| eval: true
+penguins_workflow %>% 
+  fit(data = penguins_training) %>% 
+  extract_fit_engine() %>% 
+  augment( data = penguins_training) %>% 
+  ggplot() + aes(x = .fitted, y = body_mass_kg) +#geom_point() + 
+  geom_smooth(method = "lm", color = "red") + facet_wrap(sex~species, scales = "fixed") + geom_abline(slope =1, intercept = 0)
+```
+
+## Fitted vs Actual Values: training data performance
+
+```{r}
+#| eval: true
+penguins_workflow %>% 
+  fit(data = penguins_training) %>% 
+  extract_fit_engine() %>% 
+  augment( data = penguins_training) %>% 
+  ggplot() + aes(x = .fitted, y = body_mass_kg) +#geom_point() + 
+  geom_smooth(method = "lm", color = "red") + facet_wrap(sex~species, scales = "free") + geom_abline(slope =1, intercept = 0)
+```
+
+## Fitted vs Actual Values: testing data performance
+::: {.fragment}
+RMSE and RSQ of testing data fit
+:::
+::: {.fragment}
+```{r}
+#| echo: true
+#| eval: true
+#| code-line-numbers: "1|2|3"
+penguins_workflow %>% 
+  last_fit(penguins_split) %>% 
+  collect_metrics()
+```
+:::
+
+::: {.fragment}
+*RMSE and RSQ are very close to training data, which is what we want to achive*
+:::
+
+::: {.fragment}
+What about the predictions and actual values?
+:::
+::: {.fragment}
+```{r}
+#| echo: true
+#| eval: true
+#| code-line-numbers: "3"
+penguins_workflow %>% 
+  last_fit(penguins_split) %>% 
+  collect_predictions()
+```
+:::
+
+## Fitted vs Actual Values: testing data performance
+
+```{r}
+#| eval: true
+penguins_workflow %>% 
+  last_fit(penguins_split) %>% 
+  collect_predictions() %>% 
+  ggplot() + aes(x = .pred, y = body_mass_kg) +geom_point(color = "orange2") + 
+  geom_smooth(method = "lm", color = "orange2")  + geom_abline(slope =1, intercept = 0)
+```
+
+
+## ## Fitted vs Actual Values: testing data performance
+
+```{r}
+#| eval: true
+penguins_workflow %>% 
+  last_fit(penguins_split) %>% 
+  collect_predictions() %>% 
+  bind_cols(sex = penguins_testing$sex, species = penguins_testing$species) %>% 
+  ggplot() + aes(x = .pred, y = body_mass_kg) +#geom_point() + 
+  geom_smooth(method = "lm", color = "orange2") + facet_wrap(sex~species, scales = "fixed") + geom_abline(slope =1, intercept = 0)
+```
