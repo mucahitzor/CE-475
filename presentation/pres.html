@@ -1010,8 +1010,20 @@ F-statistic: 272.6 on 6 and 242 DF,  p-value: &lt; 2.2e-16</code></pre>
 </section>
 <section id="fitted-vs-actual-values-training-data-performance" class="slide level2">
 <h2>Fitted vs Actual Values: training data performance</h2>
-
-<img data-src="pres_files/figure-revealjs/unnamed-chunk-25-1.png" width="960" class="r-stretch"></section>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1"></a>penguins_workflow <span class="sc">%&gt;%</span> </span>
+<span id="cb41-2"><a href="#cb41-2"></a>  <span class="fu">fit</span>(<span class="at">data =</span> penguins_training) <span class="sc">%&gt;%</span> </span>
+<span id="cb41-3"><a href="#cb41-3"></a>  <span class="fu">extract_fit_engine</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb41-4"><a href="#cb41-4"></a>  <span class="fu">augment</span>( <span class="at">data =</span> penguins_training) <span class="sc">%&gt;%</span> </span>
+<span id="cb41-5"><a href="#cb41-5"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span> <span class="fu">aes</span>(<span class="at">x =</span> .fitted, <span class="at">y =</span> body_mass_kg) <span class="sc">+</span><span class="fu">geom_point</span>(<span class="at">color =</span> <span class="st">"blue"</span>, <span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span> </span>
+<span id="cb41-6"><a href="#cb41-6"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">color =</span> <span class="st">"red"</span>) <span class="sc">+</span> <span class="fu">facet_wrap</span>(sex<span class="sc">~</span>species, <span class="at">scales =</span> <span class="st">"fixed"</span>) <span class="sc">+</span> <span class="fu">geom_abline</span>(<span class="at">slope =</span><span class="dv">1</span>, <span class="at">intercept =</span> <span class="dv">0</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell fragment">
+<div class="cell-output-display">
+<p><img data-src="pres_files/figure-revealjs/unnamed-chunk-25-1.png" width="960"></p>
+</div>
+</div>
+</section>
 <section id="fitted-vs-actual-values-training-data-performance-1" class="slide level2">
 <h2>Fitted vs Actual Values: training data performance</h2>
 
@@ -1027,9 +1039,9 @@ F-statistic: 272.6 on 6 and 242 DF,  p-value: &lt; 2.2e-16</code></pre>
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb41" data-code-line-numbers="1|2|3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1"></a>penguins_workflow <span class="sc">%&gt;%</span> </span>
-<span id="cb41-2"><a href="#cb41-2"></a>  <span class="fu">last_fit</span>(penguins_split) <span class="sc">%&gt;%</span> </span>
-<span id="cb41-3"><a href="#cb41-3"></a>  <span class="fu">collect_metrics</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb42" data-code-line-numbers="1|2|3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1"></a>penguins_workflow <span class="sc">%&gt;%</span> </span>
+<span id="cb42-2"><a href="#cb42-2"></a>  <span class="fu">last_fit</span>(penguins_split) <span class="sc">%&gt;%</span> </span>
+<span id="cb42-3"><a href="#cb42-3"></a>  <span class="fu">collect_metrics</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell fragment">
 <div class="cell-output cell-output-stdout">
@@ -1049,9 +1061,9 @@ F-statistic: 272.6 on 6 and 242 DF,  p-value: &lt; 2.2e-16</code></pre>
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb43" data-code-line-numbers="3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1"></a>penguins_workflow <span class="sc">%&gt;%</span> </span>
-<span id="cb43-2"><a href="#cb43-2"></a>  <span class="fu">last_fit</span>(penguins_split) <span class="sc">%&gt;%</span> </span>
-<span id="cb43-3"><a href="#cb43-3"></a>  <span class="fu">collect_predictions</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb44" data-code-line-numbers="3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1"></a>penguins_workflow <span class="sc">%&gt;%</span> </span>
+<span id="cb44-2"><a href="#cb44-2"></a>  <span class="fu">last_fit</span>(penguins_split) <span class="sc">%&gt;%</span> </span>
+<span id="cb44-3"><a href="#cb44-3"></a>  <span class="fu">collect_predictions</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell fragment">
 <div class="cell-output cell-output-stdout">
@@ -1078,7 +1090,7 @@ F-statistic: 272.6 on 6 and 242 DF,  p-value: &lt; 2.2e-16</code></pre>
 
 <img data-src="pres_files/figure-revealjs/unnamed-chunk-30-1.png" width="960" class="r-stretch"></section>
 <section id="fitted-vs-actual-values-testing-data-performance-2" class="slide level2">
-<h2>## Fitted vs Actual Values: testing data performance</h2>
+<h2>Fitted vs Actual Values: testing data performance</h2>
 
 <img data-src="pres_files/figure-revealjs/unnamed-chunk-31-1.png" width="960" class="r-stretch"><div class="footer footer-default">
 

@@ -385,6 +385,7 @@ penguins_workflow %>%
 
 ```{r}
 #| eval: true
+#| echo: true
 penguins_workflow %>% 
   fit(data = penguins_training) %>% 
   extract_fit_engine() %>% 
@@ -464,7 +465,7 @@ penguins_workflow %>%
   geom_smooth(method = "lm", color = "orange2")  + geom_abline(slope =1, intercept = 0)
 ```
 
-## \## Fitted vs Actual Values: testing data performance
+## Fitted vs Actual Values: testing data performance
 
 ```{r}
 #| eval: true
