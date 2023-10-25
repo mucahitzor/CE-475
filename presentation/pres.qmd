@@ -83,7 +83,7 @@ penguins_rawdata %>% summary()
 ```
 
 
-## Initial Exploaratory Plot
+## Initial Exploratory Plot
 ```{r}
 #| echo: true
 #| eval: true
