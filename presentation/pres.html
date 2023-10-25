@@ -517,14 +517,25 @@ Mücahit ZOR
 </div>
 </div>
 </section>
+<section id="initial-exploaratory-plot" class="slide level2">
+<h2>Initial Exploaratory Plot</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a>penguins_rawdata <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="fu">where</span>(is.numeric), <span class="sc">-</span>year) <span class="sc">%&gt;%</span> <span class="fu">pairs</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell fragment">
+<div class="cell-output-display">
+<p><img data-src="pres_files/figure-revealjs/unnamed-chunk-6-1.png" width="960"></p>
+</div>
+</div>
+</section>
 <section id="the-data-3" class="slide level2">
 <h2>The Data</h2>
 <p>Lets check out the distribution of penguins closer</p>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a>penguins_rawdata <span class="sc">%&gt;%</span> </span>
-<span id="cb7-2"><a href="#cb7-2"></a>  <span class="fu">na.omit</span>() <span class="sc">%&gt;%</span> </span>
-<span id="cb7-3"><a href="#cb7-3"></a>  <span class="fu">count</span>(species, island, <span class="at">sort =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a>penguins_rawdata <span class="sc">%&gt;%</span> </span>
+<span id="cb8-2"><a href="#cb8-2"></a>  <span class="fu">na.omit</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb8-3"><a href="#cb8-3"></a>  <span class="fu">count</span>(species, island, <span class="at">sort =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell fragment">
 <div class="cell-output cell-output-stdout">
@@ -553,11 +564,11 @@ Mücahit ZOR
 </ul>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb9" data-code-line-numbers="1|2|3|4|5|"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a>penguins_rawdata <span class="sc">%&gt;%</span> </span>
-<span id="cb9-2"><a href="#cb9-2"></a>  <span class="fu">na.omit</span>() <span class="sc">%&gt;%</span> </span>
-<span id="cb9-3"><a href="#cb9-3"></a>  <span class="fu">mutate</span>(<span class="at">body_mass_kg =</span> body_mass_g <span class="sc">/</span> <span class="dv">1000</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb9-4"><a href="#cb9-4"></a>  <span class="fu">select</span>(<span class="sc">-</span>body_mass_g) <span class="ot">-&gt;</span> penguins</span>
-<span id="cb9-5"><a href="#cb9-5"></a>penguins</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb10" data-code-line-numbers="1|2|3|4|5|"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a>penguins_rawdata <span class="sc">%&gt;%</span> </span>
+<span id="cb10-2"><a href="#cb10-2"></a>  <span class="fu">na.omit</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb10-3"><a href="#cb10-3"></a>  <span class="fu">mutate</span>(<span class="at">body_mass_kg =</span> body_mass_g <span class="sc">/</span> <span class="dv">1000</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb10-4"><a href="#cb10-4"></a>  <span class="fu">select</span>(<span class="sc">-</span>body_mass_g) <span class="ot">-&gt;</span> penguins</span>
+<span id="cb10-5"><a href="#cb10-5"></a>penguins</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell fragment">
 <div class="cell-output cell-output-stdout">
@@ -601,9 +612,9 @@ Mücahit ZOR
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb11" data-code-line-numbers="1|2|3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a><span class="fu">set.seed</span>(<span class="dv">25112023</span>)</span>
-<span id="cb11-2"><a href="#cb11-2"></a>penguins_split <span class="ot">&lt;-</span> penguins <span class="sc">%&gt;%</span> <span class="fu">initial_split</span>() </span>
-<span id="cb11-3"><a href="#cb11-3"></a>penguins_split</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12" data-code-line-numbers="1|2|3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a><span class="fu">set.seed</span>(<span class="dv">25112023</span>)</span>
+<span id="cb12-2"><a href="#cb12-2"></a>penguins_split <span class="ot">&lt;-</span> penguins <span class="sc">%&gt;%</span> <span class="fu">initial_split</span>() </span>
+<span id="cb12-3"><a href="#cb12-3"></a>penguins_split</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell fragment">
 <div class="cell-output cell-output-stdout">
@@ -617,8 +628,8 @@ Mücahit ZOR
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb13" data-code-line-numbers="1|2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a>penguins_training <span class="ot">&lt;-</span> <span class="fu">training</span>(penguins_split)</span>
-<span id="cb13-2"><a href="#cb13-2"></a>penguins_training</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb14" data-code-line-numbers="1|2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1"></a>penguins_training <span class="ot">&lt;-</span> <span class="fu">training</span>(penguins_split)</span>
+<span id="cb14-2"><a href="#cb14-2"></a>penguins_training</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell fragment">
 <div class="cell-output cell-output-stdout">
@@ -653,8 +664,8 @@ Mücahit ZOR
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb15" data-code-line-numbers="1|2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a>penguins_testing <span class="ot">&lt;-</span> <span class="fu">testing</span>(penguins_split)</span>
-<span id="cb15-2"><a href="#cb15-2"></a>penguins_testing</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb16" data-code-line-numbers="1|2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1"></a>penguins_testing <span class="ot">&lt;-</span> <span class="fu">testing</span>(penguins_split)</span>
+<span id="cb16-2"><a href="#cb16-2"></a>penguins_testing</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell fragment">
 <div class="cell-output cell-output-stdout">
@@ -698,7 +709,7 @@ Mücahit ZOR
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1"></a>penguins_training <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="fu">where</span>(is.numeric)) <span class="sc">%&gt;%</span> <span class="fu">cor</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1"></a>penguins_training <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="fu">where</span>(is.numeric)) <span class="sc">%&gt;%</span> <span class="fu">cor</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell fragment">
 <div class="cell-output cell-output-stdout">
@@ -732,11 +743,11 @@ body_mass_kg        1.00000000</code></pre>
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb19" data-code-line-numbers="1|2-3|4|"><pre class="sourceCode numberSource r code-overflow-wrap number-lines code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1"></a>leaps<span class="sc">::</span><span class="fu">regsubsets</span>(</span>
-<span id="cb19-2"><a href="#cb19-2"></a>  body_mass_kg <span class="sc">~</span> ., <span class="at">data =</span> penguins_training, <span class="at">nvmax =</span> <span class="cn">NULL</span>,</span>
-<span id="cb19-3"><a href="#cb19-3"></a>  <span class="at">method =</span> <span class="st">"exhaustive"</span>, <span class="at">force.in =</span> <span class="cn">NULL</span>, <span class="at">force.out =</span> <span class="st">"year"</span></span>
-<span id="cb19-4"><a href="#cb19-4"></a>) <span class="ot">-&gt;</span> best_subset</span>
-<span id="cb19-5"><a href="#cb19-5"></a>best_subset</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb20" data-code-line-numbers="1|2-3|4|"><pre class="sourceCode numberSource r code-overflow-wrap number-lines code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1"></a>leaps<span class="sc">::</span><span class="fu">regsubsets</span>(</span>
+<span id="cb20-2"><a href="#cb20-2"></a>  body_mass_kg <span class="sc">~</span> ., <span class="at">data =</span> penguins_training, <span class="at">nvmax =</span> <span class="cn">NULL</span>,</span>
+<span id="cb20-3"><a href="#cb20-3"></a>  <span class="at">method =</span> <span class="st">"exhaustive"</span>, <span class="at">force.in =</span> <span class="cn">NULL</span>, <span class="at">force.out =</span> <span class="st">"year"</span></span>
+<span id="cb20-4"><a href="#cb20-4"></a>) <span class="ot">-&gt;</span> best_subset</span>
+<span id="cb20-5"><a href="#cb20-5"></a>best_subset</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell fragment">
 <div class="cell-output cell-output-stdout">
@@ -768,9 +779,9 @@ Selection Algorithm: exhaustive</code></pre>
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1"></a>best_subset <span class="sc">%&gt;%</span> </span>
-<span id="cb21-2"><a href="#cb21-2"></a>  <span class="fu">summary</span>() <span class="ot">-&gt;</span> best_subset_summary</span>
-<span id="cb21-3"><a href="#cb21-3"></a>best_subset_summary<span class="sc">$</span>adjr2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1"></a>best_subset <span class="sc">%&gt;%</span> </span>
+<span id="cb22-2"><a href="#cb22-2"></a>  <span class="fu">summary</span>() <span class="ot">-&gt;</span> best_subset_summary</span>
+<span id="cb22-3"><a href="#cb22-3"></a>best_subset_summary<span class="sc">$</span>adjr2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell fragment">
 <div class="cell-output cell-output-stdout">
@@ -781,8 +792,8 @@ Selection Algorithm: exhaustive</code></pre>
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1"></a>best_subset_summary<span class="sc">$</span>adjr2 <span class="sc">%&gt;%</span> <span class="fu">which.max</span>() <span class="ot">-&gt;</span> best_mod_n</span>
-<span id="cb23-2"><a href="#cb23-2"></a>best_mod_n</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1"></a>best_subset_summary<span class="sc">$</span>adjr2 <span class="sc">%&gt;%</span> <span class="fu">which.max</span>() <span class="ot">-&gt;</span> best_mod_n</span>
+<span id="cb24-2"><a href="#cb24-2"></a>best_mod_n</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell fragment">
 <div class="cell-output cell-output-stdout">
@@ -792,7 +803,7 @@ Selection Algorithm: exhaustive</code></pre>
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1"></a>best_subset_summary<span class="sc">$</span>which[best_mod_n,]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1"></a>best_subset_summary<span class="sc">$</span>which[best_mod_n,]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell fragment">
 <div class="cell-output cell-output-stdout">
@@ -816,11 +827,11 @@ Selection Algorithm: exhaustive</code></pre>
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb27" data-code-line-numbers="1|2-4|5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1"></a>penguins_training <span class="sc">%&gt;%</span></span>
-<span id="cb27-2"><a href="#cb27-2"></a>  <span class="fu">recipe</span>(body_mass_kg <span class="sc">~</span> flipper_length_mm <span class="sc">+</span> bill_length_mm <span class="sc">+</span> bill_depth_mm<span class="sc">+</span> species <span class="sc">+</span> sex) <span class="sc">%&gt;%</span> </span>
-<span id="cb27-3"><a href="#cb27-3"></a>  <span class="fu">step_dummy</span>(species) <span class="sc">%&gt;%</span> </span>
-<span id="cb27-4"><a href="#cb27-4"></a>  <span class="fu">step_dummy</span>(sex) <span class="ot">-&gt;</span> penguins_recipe</span>
-<span id="cb27-5"><a href="#cb27-5"></a>penguins_recipe</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb28" data-code-line-numbers="1|2-4|5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1"></a>penguins_training <span class="sc">%&gt;%</span></span>
+<span id="cb28-2"><a href="#cb28-2"></a>  <span class="fu">recipe</span>(body_mass_kg <span class="sc">~</span> flipper_length_mm <span class="sc">+</span> bill_length_mm <span class="sc">+</span> bill_depth_mm<span class="sc">+</span> species <span class="sc">+</span> sex) <span class="sc">%&gt;%</span> </span>
+<span id="cb28-3"><a href="#cb28-3"></a>  <span class="fu">step_dummy</span>(species) <span class="sc">%&gt;%</span> </span>
+<span id="cb28-4"><a href="#cb28-4"></a>  <span class="fu">step_dummy</span>(sex) <span class="ot">-&gt;</span> penguins_recipe</span>
+<span id="cb28-5"><a href="#cb28-5"></a>penguins_recipe</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell fragment">
 
@@ -831,10 +842,10 @@ Selection Algorithm: exhaustive</code></pre>
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb28" data-code-line-numbers="1|2|3|4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1"></a><span class="fu">linear_reg</span>() <span class="sc">%&gt;%</span> </span>
-<span id="cb28-2"><a href="#cb28-2"></a>  <span class="fu">set_engine</span>(<span class="st">"lm"</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb28-3"><a href="#cb28-3"></a>  <span class="fu">set_mode</span>(<span class="st">"regression"</span>) <span class="ot">-&gt;</span> lm_spec</span>
-<span id="cb28-4"><a href="#cb28-4"></a>lm_spec</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb29" data-code-line-numbers="1|2|3|4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1"></a><span class="fu">linear_reg</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb29-2"><a href="#cb29-2"></a>  <span class="fu">set_engine</span>(<span class="st">"lm"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb29-3"><a href="#cb29-3"></a>  <span class="fu">set_mode</span>(<span class="st">"regression"</span>) <span class="ot">-&gt;</span> lm_spec</span>
+<span id="cb29-4"><a href="#cb29-4"></a>lm_spec</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell fragment">
 <div class="cell-output cell-output-stdout">
@@ -849,10 +860,10 @@ Computational engine: lm </code></pre>
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb30" data-code-line-numbers="1|2|3|4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1"></a><span class="fu">workflow</span>() <span class="sc">%&gt;%</span> </span>
-<span id="cb30-2"><a href="#cb30-2"></a>  <span class="fu">add_model</span>(lm_spec) <span class="sc">%&gt;%</span> </span>
-<span id="cb30-3"><a href="#cb30-3"></a>  <span class="fu">add_recipe</span>(penguins_recipe) <span class="ot">-&gt;</span> penguins_workflow</span>
-<span id="cb30-4"><a href="#cb30-4"></a>penguins_workflow</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb31" data-code-line-numbers="1|2|3|4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1"></a><span class="fu">workflow</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb31-2"><a href="#cb31-2"></a>  <span class="fu">add_model</span>(lm_spec) <span class="sc">%&gt;%</span> </span>
+<span id="cb31-3"><a href="#cb31-3"></a>  <span class="fu">add_recipe</span>(penguins_recipe) <span class="ot">-&gt;</span> penguins_workflow</span>
+<span id="cb31-4"><a href="#cb31-4"></a>penguins_workflow</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell fragment">
 <div class="cell-output cell-output-stdout">
@@ -878,8 +889,8 @@ Computational engine: lm </code></pre>
 <h2>Fiting the Model</h2>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb32" data-code-line-numbers="1|2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1"></a>penguins_workflow <span class="sc">%&gt;%</span> </span>
-<span id="cb32-2"><a href="#cb32-2"></a>  <span class="fu">fit</span>(<span class="at">data =</span> penguins_training)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb33" data-code-line-numbers="1|2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1"></a>penguins_workflow <span class="sc">%&gt;%</span> </span>
+<span id="cb33-2"><a href="#cb33-2"></a>  <span class="fu">fit</span>(<span class="at">data =</span> penguins_training)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell fragment">
 <div class="cell-output cell-output-stdout">
@@ -908,10 +919,10 @@ Coefficients:
 </div>
 <div class="fragment" data-auto-animate="true">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb34" data-code-line-numbers="3|4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1"></a>penguins_workflow <span class="sc">%&gt;%</span> </span>
-<span id="cb34-2"><a href="#cb34-2"></a>  <span class="fu">fit</span>(<span class="at">data =</span> penguins_training) <span class="sc">%&gt;%</span> </span>
-<span id="cb34-3"><a href="#cb34-3"></a>  <span class="fu">extract_fit_engine</span>() <span class="sc">%&gt;%</span> </span>
-<span id="cb34-4"><a href="#cb34-4"></a>  <span class="fu">summary</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb35" data-code-line-numbers="3|4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1"></a>penguins_workflow <span class="sc">%&gt;%</span> </span>
+<span id="cb35-2"><a href="#cb35-2"></a>  <span class="fu">fit</span>(<span class="at">data =</span> penguins_training) <span class="sc">%&gt;%</span> </span>
+<span id="cb35-3"><a href="#cb35-3"></a>  <span class="fu">extract_fit_engine</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb35-4"><a href="#cb35-4"></a>  <span class="fu">summary</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell fragment">
 <div class="cell-output cell-output-stdout">
@@ -946,11 +957,11 @@ F-statistic: 272.6 on 6 and 242 DF,  p-value: &lt; 2.2e-16</code></pre>
 <h2>Fitted vs Actual Values &amp; RMSE</h2>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb36" data-code-line-numbers="4|5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1"></a>penguins_workflow <span class="sc">%&gt;%</span> </span>
-<span id="cb36-2"><a href="#cb36-2"></a>  <span class="fu">fit</span>(<span class="at">data =</span> penguins_training) <span class="sc">%&gt;%</span> </span>
-<span id="cb36-3"><a href="#cb36-3"></a>  <span class="fu">extract_fit_engine</span>() <span class="sc">%&gt;%</span> </span>
-<span id="cb36-4"><a href="#cb36-4"></a>  <span class="fu">augment</span>(<span class="at">data =</span> penguins_training) <span class="sc">%&gt;%</span> </span>
-<span id="cb36-5"><a href="#cb36-5"></a>  <span class="fu">select</span>(body_mass_kg, .fitted, .std.resid)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb37" data-code-line-numbers="4|5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1"></a>penguins_workflow <span class="sc">%&gt;%</span> </span>
+<span id="cb37-2"><a href="#cb37-2"></a>  <span class="fu">fit</span>(<span class="at">data =</span> penguins_training) <span class="sc">%&gt;%</span> </span>
+<span id="cb37-3"><a href="#cb37-3"></a>  <span class="fu">extract_fit_engine</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb37-4"><a href="#cb37-4"></a>  <span class="fu">augment</span>(<span class="at">data =</span> penguins_training) <span class="sc">%&gt;%</span> </span>
+<span id="cb37-5"><a href="#cb37-5"></a>  <span class="fu">select</span>(body_mass_kg, .fitted, .std.resid)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell fragment">
 <div class="cell-output cell-output-stdout">
@@ -974,11 +985,11 @@ F-statistic: 272.6 on 6 and 242 DF,  p-value: &lt; 2.2e-16</code></pre>
 <div class="fragment">
 <p>The root mean squared error is</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb38" data-code-line-numbers="5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1"></a>penguins_workflow <span class="sc">%&gt;%</span> </span>
-<span id="cb38-2"><a href="#cb38-2"></a>  <span class="fu">fit</span>(<span class="at">data =</span> penguins_training) <span class="sc">%&gt;%</span> </span>
-<span id="cb38-3"><a href="#cb38-3"></a>  <span class="fu">extract_fit_engine</span>() <span class="sc">%&gt;%</span> </span>
-<span id="cb38-4"><a href="#cb38-4"></a>  <span class="fu">augment</span>(<span class="at">data=</span> penguins_training) <span class="sc">%&gt;%</span> </span>
-<span id="cb38-5"><a href="#cb38-5"></a>  <span class="fu">rmse</span>(<span class="at">truth =</span> body_mass_kg, <span class="at">estimate =</span> .fitted)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb39" data-code-line-numbers="5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1"></a>penguins_workflow <span class="sc">%&gt;%</span> </span>
+<span id="cb39-2"><a href="#cb39-2"></a>  <span class="fu">fit</span>(<span class="at">data =</span> penguins_training) <span class="sc">%&gt;%</span> </span>
+<span id="cb39-3"><a href="#cb39-3"></a>  <span class="fu">extract_fit_engine</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb39-4"><a href="#cb39-4"></a>  <span class="fu">augment</span>(<span class="at">data=</span> penguins_training) <span class="sc">%&gt;%</span> </span>
+<span id="cb39-5"><a href="#cb39-5"></a>  <span class="fu">rmse</span>(<span class="at">truth =</span> body_mass_kg, <span class="at">estimate =</span> .fitted)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell fragment">
 <div class="cell-output cell-output-stdout">
@@ -993,15 +1004,15 @@ F-statistic: 272.6 on 6 and 242 DF,  p-value: &lt; 2.2e-16</code></pre>
 <section id="fitted-vs-actual-values-training-data-performance" class="slide level2">
 <h2>Fitted vs Actual Values: training data performance</h2>
 
-<img data-src="pres_files/figure-revealjs/unnamed-chunk-24-1.png" width="960" class="r-stretch"></section>
+<img data-src="pres_files/figure-revealjs/unnamed-chunk-25-1.png" width="960" class="r-stretch"></section>
 <section id="fitted-vs-actual-values-training-data-performance-1" class="slide level2">
 <h2>Fitted vs Actual Values: training data performance</h2>
 
-<img data-src="pres_files/figure-revealjs/unnamed-chunk-25-1.png" width="960" class="r-stretch"></section>
+<img data-src="pres_files/figure-revealjs/unnamed-chunk-26-1.png" width="960" class="r-stretch"></section>
 <section id="fitted-vs-actual-values-training-data-performance-2" class="slide level2">
 <h2>Fitted vs Actual Values: training data performance</h2>
 
-<img data-src="pres_files/figure-revealjs/unnamed-chunk-26-1.png" width="960" class="r-stretch"></section>
+<img data-src="pres_files/figure-revealjs/unnamed-chunk-27-1.png" width="960" class="r-stretch"></section>
 <section id="fitted-vs-actual-values-testing-data-performance" class="slide level2">
 <h2>Fitted vs Actual Values: testing data performance</h2>
 <div class="fragment">
@@ -1009,9 +1020,9 @@ F-statistic: 272.6 on 6 and 242 DF,  p-value: &lt; 2.2e-16</code></pre>
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb40" data-code-line-numbers="1|2|3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1"></a>penguins_workflow <span class="sc">%&gt;%</span> </span>
-<span id="cb40-2"><a href="#cb40-2"></a>  <span class="fu">last_fit</span>(penguins_split) <span class="sc">%&gt;%</span> </span>
-<span id="cb40-3"><a href="#cb40-3"></a>  <span class="fu">collect_metrics</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb41" data-code-line-numbers="1|2|3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1"></a>penguins_workflow <span class="sc">%&gt;%</span> </span>
+<span id="cb41-2"><a href="#cb41-2"></a>  <span class="fu">last_fit</span>(penguins_split) <span class="sc">%&gt;%</span> </span>
+<span id="cb41-3"><a href="#cb41-3"></a>  <span class="fu">collect_metrics</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell fragment">
 <div class="cell-output cell-output-stdout">
@@ -1031,9 +1042,9 @@ F-statistic: 272.6 on 6 and 242 DF,  p-value: &lt; 2.2e-16</code></pre>
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb42" data-code-line-numbers="3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1"></a>penguins_workflow <span class="sc">%&gt;%</span> </span>
-<span id="cb42-2"><a href="#cb42-2"></a>  <span class="fu">last_fit</span>(penguins_split) <span class="sc">%&gt;%</span> </span>
-<span id="cb42-3"><a href="#cb42-3"></a>  <span class="fu">collect_predictions</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb43" data-code-line-numbers="3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1"></a>penguins_workflow <span class="sc">%&gt;%</span> </span>
+<span id="cb43-2"><a href="#cb43-2"></a>  <span class="fu">last_fit</span>(penguins_split) <span class="sc">%&gt;%</span> </span>
+<span id="cb43-3"><a href="#cb43-3"></a>  <span class="fu">collect_predictions</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell fragment">
 <div class="cell-output cell-output-stdout">
@@ -1058,11 +1069,11 @@ F-statistic: 272.6 on 6 and 242 DF,  p-value: &lt; 2.2e-16</code></pre>
 <section id="fitted-vs-actual-values-testing-data-performance-1" class="slide level2">
 <h2>Fitted vs Actual Values: testing data performance</h2>
 
-<img data-src="pres_files/figure-revealjs/unnamed-chunk-29-1.png" width="960" class="r-stretch"></section>
+<img data-src="pres_files/figure-revealjs/unnamed-chunk-30-1.png" width="960" class="r-stretch"></section>
 <section id="fitted-vs-actual-values-testing-data-performance-2" class="slide level2">
 <h2>## Fitted vs Actual Values: testing data performance</h2>
 
-<img data-src="pres_files/figure-revealjs/unnamed-chunk-30-1.png" width="960" class="r-stretch"><div class="footer footer-default">
+<img data-src="pres_files/figure-revealjs/unnamed-chunk-31-1.png" width="960" class="r-stretch"><div class="footer footer-default">
 
 </div>
 </section>

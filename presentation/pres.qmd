@@ -24,12 +24,12 @@ format:
 editor_options: 
   chunk_output_type: console
 ---
+
 ```{r}
 options(tibble.width = 100)
 ```
 
-
-## Packages 
+## Packages
 
 First things first: we need to load the necessary libraries
 
@@ -47,12 +47,9 @@ theme_set(theme_ipsum_es(axis_title_size = 11 , axis_title_just = "c") +
             theme(axis.line = element_line(color ="black")))
 ```
 
-
-## The Data 
-
+## The Data
 
 The data contains size measurements for three penguin species that lives on three islands.
-
 
 ```{r}
 #| echo: true
@@ -71,12 +68,11 @@ penguins_rawdata <- palmerpenguins::penguins
 penguins_rawdata 
 ```
 
-
-:::{.fragment}
-![](https://allisonhorst.github.io/palmerpenguins/reference/figures/lter_penguins.png){fig-align="center" width=50%}
+::: fragment
+![](https://allisonhorst.github.io/palmerpenguins/reference/figures/lter_penguins.png){fig-align="center" width="50%"}
 :::
 
-## The Data {auto-animate="true"} 
+## The Data {auto-animate="true"}
 
 Distribution of the varaibles
 
@@ -86,11 +82,20 @@ Distribution of the varaibles
 penguins_rawdata %>% summary()
 ```
 
+
+## Initial Exploaratory Plot
+```{r}
+#| echo: true
+#| eval: true
+penguins_rawdata %>% select(where(is.numeric), -year) %>% pairs()
+```
+
+
 ## The Data
 
 Lets check out the distribution of penguins closer
 
-::: {.fragment}
+::: fragment
 ```{r}
 #| echo: true
 #| eval: true
@@ -98,25 +103,21 @@ penguins_rawdata %>%
   na.omit() %>% 
   count(species, island, sort = TRUE)
 ```
-
-
 :::
 
-::: {.fragment}
-Since Adelie is the only one that lives on 3 of the islands. Should we really use `island`? 
+::: fragment
+Since Adelie is the only one that lives on 3 of the islands. Should we really use `island`?
 
 We'll come to that later on
 :::
 
 ## Data Cleaning
 
-
 -   removing NA values
 -   transforming `body_mass_g` to `body_mass_kg`
 -   assigning results to a new data frame
 
-
-::: {.fragment}
+::: fragment
 ```{r}
 #| echo: true
 #| eval: true
@@ -133,16 +134,15 @@ penguins
 #| echo: false
 penguins$species <- factor(penguins$species, levels = c("Gentoo", "Adelie", "Chinstrap"), ordered = F)
 ```
-
 :::
 
 ## Splitting the Data {.small}
 
-::: {.fragment}
+::: fragment
 Initial split:
 :::
 
-::: {.fragment}
+::: fragment
 ```{r}
 #| echo: true
 #| eval: true
@@ -153,12 +153,11 @@ penguins_split
 ```
 :::
 
-::: {.fragment}
-
+::: fragment
 Extract the training and the test data:
 :::
 
-::: {.fragment}
+::: fragment
 ```{r}
 #| echo: true
 #| eval: true
@@ -168,7 +167,7 @@ penguins_training
 ```
 :::
 
-::: {.fragment}
+::: fragment
 ```{r}
 #| echo: true
 #| eval: true
@@ -179,16 +178,16 @@ penguins_testing
 :::
 
 ## Defining the model
-::: {.fragment}
-We want to predict `body_mass_kg` of penguins. 
+
+::: fragment
+We want to predict `body_mass_kg` of penguins.
 :::
 
-::: {.fragment}
+::: fragment
 Lets first check the correlation between numeric variables
 :::
 
-::: {.fragment}
-
+::: fragment
 ```{r}
 #| eval: true
 #| echo: true
@@ -196,24 +195,23 @@ penguins_training %>% select(where(is.numeric)) %>% cor()
 ```
 :::
 
-::: {.fragment}
-
+::: fragment
 There seems like a correlation between `body_mass_g` and all the numeric variables expect `year` which we cannot consider a numeric variable.
 :::
 
-::: {.fragment}
+::: fragment
 So, we decide not to use `year` in our model.
 :::
 
-
 ## Defining the model
+
 ### Variable selection: mixed method
-::: {.fragment}
+
+::: fragment
 We now need to decide which variables to use. Lets use a mixed method of *forward selection* and *backward selection*
 :::
 
-::: {.fragment}
-
+::: fragment
 ```{r}
 #| code-overflow: wrap
 #| eval: true
@@ -225,16 +223,17 @@ leaps::regsubsets(
 ) -> best_subset
 best_subset
 ```
-
 :::
 
 ## Defining the model
+
 ### Variable selection: mixed method
-::: {.fragment}
+
+::: fragment
 We now need to decide which variables to use. Lets use a mixed method of *forward selection* and *backward selection*
 :::
 
-::: {.fragment}
+::: fragment
 ```{r}
 #| eval: true
 #| echo: true
@@ -244,7 +243,7 @@ best_subset_summary$adjr2
 ```
 :::
 
-::: {.fragment}
+::: fragment
 ```{r}
 #| eval: true
 #| echo: true
@@ -253,7 +252,7 @@ best_mod_n
 ```
 :::
 
-::: {.fragment}
+::: fragment
 ```{r}
 #| eval: true
 #| echo: true
@@ -261,17 +260,17 @@ best_subset_summary$which[best_mod_n,]
 ```
 :::
 
-::: {.fragment}
-Variable `island`  is not on the best model so we are not going to include it to our model formula as well.
+::: fragment
+Variable `island` is not on the best model so we are not going to include it to our model formula as well.
 :::
 
 ## Recipe + Model = Workflow
 
-::: {.fragment}
+::: fragment
 Now we can define our *recipe*; which includes model formula and preprocessings
 :::
 
-::: {.fragment}
+::: fragment
 ```{r}
 #| echo: true
 #| eval: true
@@ -284,12 +283,11 @@ penguins_recipe
 ```
 :::
 
-::: {.fragment}
+::: fragment
 In what model we are going to use the recepie?
 :::
 
-::: {.fragment}
-
+::: fragment
 ```{r}
 #| echo: true
 #| eval: true
@@ -301,11 +299,11 @@ lm_spec
 ```
 :::
 
-::: {.fragment}
+::: fragment
 Then, our workflow becomes
 :::
 
-::: {.fragment}
+::: fragment
 ```{r}
 #| echo: true
 #| eval: true
@@ -315,14 +313,11 @@ workflow() %>%
   add_recipe(penguins_recipe) -> penguins_workflow
 penguins_workflow
 ```
-
 :::
-
 
 ## Fiting the Model
 
-::: {.fragment}
-
+::: fragment
 ```{r}
 #| echo: true
 #| eval: true
@@ -346,7 +341,7 @@ penguins_workflow %>%
 
 ## Fitted vs Actual Values & RMSE
 
-::: {.fragment}
+::: fragment
 ```{r}
 #| echo: true
 #| eval: true
@@ -357,10 +352,10 @@ penguins_workflow %>%
   augment(data = penguins_training) %>% 
   select(body_mass_kg, .fitted, .std.resid)
 ```
-
 :::
-::: {.fragment}
-The root mean squared error is 
+
+::: fragment
+The root mean squared error is
 
 ```{r}
 #| echo: true
@@ -385,8 +380,6 @@ penguins_workflow %>%
   ggplot() + aes(x = .fitted, y = body_mass_kg) +geom_point(color = "blue", alpha = 0.5) + 
   geom_smooth(method = "lm", color = "red") + facet_wrap(sex~species, scales = "fixed") + geom_abline(slope =1, intercept = 0) 
 ```
-
-
 
 ## Fitted vs Actual Values: training data performance
 
@@ -413,10 +406,12 @@ penguins_workflow %>%
 ```
 
 ## Fitted vs Actual Values: testing data performance
-::: {.fragment}
+
+::: fragment
 RMSE and RSQ of testing data fit
 :::
-::: {.fragment}
+
+::: fragment
 ```{r}
 #| echo: true
 #| eval: true
@@ -427,14 +422,15 @@ penguins_workflow %>%
 ```
 :::
 
-::: {.fragment}
+::: fragment
 *RMSE and RSQ are very close to training data, which is what we want to achive*
 :::
 
-::: {.fragment}
+::: fragment
 What about the predictions and actual values?
 :::
-::: {.fragment}
+
+::: fragment
 ```{r}
 #| echo: true
 #| eval: true
@@ -456,8 +452,7 @@ penguins_workflow %>%
   geom_smooth(method = "lm", color = "orange2")  + geom_abline(slope =1, intercept = 0)
 ```
 
-
-## ## Fitted vs Actual Values: testing data performance
+## \## Fitted vs Actual Values: testing data performance
 
 ```{r}
 #| eval: true
