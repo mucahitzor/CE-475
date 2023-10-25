@@ -5,7 +5,7 @@ author:
     - Samet ŞİMŞEK
     - Mücahit ZOR
 date: 10/25/2023
-format: html
+format: pdf
 editor: visual
 editor_options: 
   chunk_output_type: console
@@ -22,7 +22,7 @@ suppressPackageStartupMessages({
   library(tidymodels)# modeling
   library(hrbrthemes)# plot themes
 })
-theme_set(theme_ipsum_es(axis_title_size = 11 , axis_title_just = "c") + theme(axis.line = element_line(color ="black")))
+theme_set(theme_classic())
 ```
 
 # The data
@@ -173,9 +173,8 @@ To see the `root mean squared error` we use `rmse` function
 ```{r}
 penguins_workflow %>% 
   fit(data = penguins_training) %>% 
-  extract_fit_engine() %>% 
-  augment(data = penguins_training) %>% 
-  rmse(truth = body_mass_kg, estimate = .fitted)
+  augment(new_data = penguins_training) %>% 
+  rmse(truth = body_mass_kg, estimate = .pred)
 ```
 
 To see the actual values of dependent varaible and our estimation together we use `augment` function and select the two
@@ -218,16 +217,16 @@ penguins_workflow %>%
 
 We see that they are very close to training data, which is what we were looking for.
 
-
 We can get the predictions on test data set:
+
 ```{r}
 penguins_workflow %>% 
   last_fit(penguins_split) %>% 
   collect_predictions()
 ```
 
-
 Here is a plot to see how accurate our predictions look like
+
 ```{r}
 penguins_workflow %>% 
   last_fit(penguins_split) %>% 
@@ -237,6 +236,7 @@ penguins_workflow %>%
 ```
 
 Here is the breakdown of predictions on `sex` and `gender`. Seems like we did a good job overall!
+
 ```{r}
 penguins_workflow %>% 
   last_fit(penguins_split) %>% 
