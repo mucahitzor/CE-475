@@ -1,0 +1,11 @@
+---
+title: "Untitled"
+format: html
+---
+
+
+```{python}
+import numpy as np
+
+np.random.randint((10,2))
+```
